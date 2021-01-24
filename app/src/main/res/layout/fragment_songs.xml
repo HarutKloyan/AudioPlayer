@@ -6,10 +6,11 @@
     tools:context=".SongsFragment">
 
 
-    <RelativeLayout
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler_view"
-        android:background="@color/purple_500"/>
+        android:background="@color/purple_500"
+        android:orientation="horizontal" />
     
 </RelativeLayout>
