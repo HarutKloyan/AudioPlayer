@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/layout_top_btn"
-        android:background="@drawable/gredient_bg"
+        android:background="@drawable/gradient_bg"
         android:layout_alignParentTop="true">
 
         <ImageView
@@ -53,15 +53,14 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/music_icon"
+        android:src="@drawable/music_ic"
         android:scaleType="centerCrop"
         android:id="@+id/cover_art1"/>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:id="@+id/imageViewGredient"
-        android:src="@drawable/gredient_bg"
+        android:id="@+id/imageViewGradient"
         android:layout_alignParentBottom="true"/>
     </RelativeLayout>
     <TextView
@@ -99,7 +98,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/gredient_bg">
+        android:background="@drawable/gradient_bg">
 
         <ImageView
             android:layout_width="35dp"
