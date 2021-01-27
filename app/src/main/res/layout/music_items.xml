@@ -17,11 +17,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/music_img"
         android:text="file_name"
         android:textColor="@color/colorAccent"
+        android:layout_toStartOf="@+id/menuMore"
         android:id="@+id/music_file_name"/>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/menuMore"
+        android:src="@drawable/ic_more"
+        android:layout_alignParentEnd="true"
+        android:padding="5dp"/>
 
 
 

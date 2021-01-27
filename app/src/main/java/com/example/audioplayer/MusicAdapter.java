@@ -1,20 +1,27 @@
 package com.example.audioplayer;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder> {
@@ -38,13 +45,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         holder.file_name.setText(mFiles.get(position).getTitle());
         byte[] image = getAlbumArt(mFiles.get(position).getPath());
-        if (image != null)
-        {
+        if (image != null) {
             Glide.with(mContext).asBitmap()
                     .load(image)
                     .into(holder.album_art);
-        }
-        else {
+        } else {
             Glide.with(mContext)
                     .load(R.drawable.music_ic)
                     .into(holder.album_art);
@@ -52,12 +57,50 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext,PlayerActivity.class);
+                Intent intent = new Intent(mContext, PlayerActivity.class);
                 intent.putExtra("position", position);
                 mContext.startActivity(intent);
             }
         });
+        holder.menuMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                PopupMenu popupMenu = new PopupMenu(mContext, v);
+                popupMenu.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.delete:
+
+                                deleteFile(position, v);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+            }
+        });
     }
+    private void deleteFile(int position ,View v) {
+        Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                Long.parseLong(mFiles.get(position).getId()));
+        File file = new File(mFiles.get(position).getPath());
+        boolean delete = file.delete();
+        if (delete) {
+            mContext.getContentResolver().delete(contentUri,null, null);
+            mFiles.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, mFiles.size());
+            Toast.makeText(mContext, "Удалено", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(mContext, "Нельзя удалить", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     public int getItemCount() {
@@ -67,11 +110,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
         TextView file_name;
-        ImageView album_art;
+        ImageView album_art, menuMore;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             file_name = itemView.findViewById(R.id.music_file_name);
             album_art = itemView.findViewById(R.id.music_img);
+            menuMore = itemView.findViewById(R.id.menuMore);
         }
     }
     private byte[] getAlbumArt(String uri)
